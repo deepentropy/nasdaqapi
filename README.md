@@ -1,6 +1,20 @@
-# NASDAQ API
+<div align="center">
+  <img src="logo.svg" alt="NASDAQ API Logo" width="200" height="200">
+  
+  # NASDAQ API
+  
+  <p align="center">
+    <em>A comprehensive Python library for fetching stock data from the NASDAQ API</em>
+  </p>
+  
+  <p align="center">
+    <a href="https://pypi.org/project/nasdaqapi/"><img src="https://img.shields.io/pypi/v/nasdaqapi.svg" alt="PyPI version"></a>
+    <a href="https://pypi.org/project/nasdaqapi/"><img src="https://img.shields.io/pypi/pyversions/nasdaqapi.svg" alt="Python versions"></a>
+    <a href="https://github.com/deepentropy/nasdaqapi/blob/main/LICENSE"><img src="https://img.shields.io/github/license/deepentropy/nasdaqapi.svg" alt="License"></a>
+  </p>
+</div>
 
-A comprehensive Python library for fetching stock data from the NASDAQ API.
+---
 
 ## Features
 
