@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nasdaqapi"
-version = "0.1.0"
+version = "0.2.0"
 description = "A comprehensive Python library for fetching stock data from NASDAQ API"
 readme = "README.md"
 requires-python = ">=3.8"

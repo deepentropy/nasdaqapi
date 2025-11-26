@@ -1,59 +1,94 @@
-"""NASDAQ API Data Retrieval System.
+"""NASDAQ API Client - Clean and efficient interface to NASDAQ's public API."""
 
-A system to retrieve ticker data from NASDAQ API for all US exchanges.
-"""
+__version__ = "0.2.0"
 
-from .api import (
-    fetch_nasdaq_tickers,
-    fetch_all_nasdaq_tickers,
+from .client import NasdaqClient
+from .models import (
+    QuoteData,
+    FinancialData,
+    OwnershipData,
+    NewsData,
+)
+
+# Backward compatibility imports
+from .compat import (
+    fetch_all_symbol_data,
+    normalize_nasdaq_data,
     fetch_all_exchanges,
     get_unique_symbols,
 )
 
-from .symbol import (
-    fetch_symbol_info,
-    fetch_symbol_dividends,
-    fetch_symbol_historical,
-    fetch_company_historical_nocp,
-    fetch_company_financials,
-    fetch_analyst_peg_ratio,
-    fetch_short_interest,
-    fetch_institutional_holdings,
-    fetch_insider_trades,
-    fetch_sec_filings,
-    fetch_press_releases,
-    fetch_news_articles,
-    fetch_all_symbol_data,
-)
+# Convenience functions for quick access
+def get_quote(symbol: str) -> dict:
+    """
+    Quick access to get stock quote.
+    
+    Args:
+        symbol: Stock ticker symbol (e.g., 'AAPL')
+        
+    Returns:
+        Dictionary with normalized quote data
+        
+    Example:
+        >>> quote = get_quote('AAPL')
+        >>> print(f"Price: ${quote['price']}")
+    """
+    client = NasdaqClient()
+    return client.get_quote(symbol)
 
-from .normalizer import (
-    normalize_nasdaq_data,
-)
 
-__version__ = "0.1.0"
+def get_symbol_data(symbol: str, include: list = None) -> dict:
+    """
+    Get comprehensive data for a symbol.
+    
+    Args:
+        symbol: Stock ticker symbol
+        include: List of data categories to include. If None, includes all.
+                 Options: ['quote', 'financials', 'dividends', 'ownership', 
+                          'historical', 'news', 'analyst', 'short_interest']
+    
+    Returns:
+        Dictionary with all requested data
+        
+    Example:
+        >>> data = get_symbol_data('MSFT', include=['quote', 'financials'])
+        >>> print(data.keys())
+    """
+    client = NasdaqClient()
+    return client.get_symbol_data(symbol, include=include)
+
+
+def search_symbols(exchange: str = None, sector: str = None) -> list:
+    """
+    Search for symbols by exchange or sector.
+    
+    Args:
+        exchange: Filter by exchange ('NASDAQ', 'NYSE', 'AMEX')
+        sector: Filter by sector
+        
+    Returns:
+        List of matching symbols with basic info
+    """
+    client = NasdaqClient()
+    return client.search_symbols(exchange=exchange, sector=sector)
+
 
 __all__ = [
-    # Ticker list functions
-    "fetch_nasdaq_tickers",
-    "fetch_all_nasdaq_tickers",
+    # Main client
+    "NasdaqClient",
+    # Data models
+    "QuoteData",
+    "FinancialData",
+    "OwnershipData",
+    "NewsData",
+    # Convenience functions
+    "get_quote",
+    "get_symbol_data",
+    "search_symbols",
+    # Backward compatibility
+    "fetch_all_symbol_data",
+    "normalize_nasdaq_data",
     "fetch_all_exchanges",
     "get_unique_symbols",
-    # Symbol data functions
-    "fetch_symbol_info",
-    "fetch_symbol_dividends",
-    "fetch_symbol_historical",
-    "fetch_company_historical_nocp",
-    "fetch_company_financials",
-    "fetch_analyst_peg_ratio",
-    "fetch_short_interest",
-    "fetch_institutional_holdings",
-    "fetch_insider_trades",
-    "fetch_sec_filings",
-    "fetch_press_releases",
-    "fetch_news_articles",
-    "fetch_all_symbol_data",
-    # Normalizer
-    "normalize_nasdaq_data",
 ]
-
 

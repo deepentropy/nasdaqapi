@@ -23,7 +23,9 @@
 - 📊 **Financial Statements**: Income statements, balance sheets, cash flow (annual & quarterly)
 - 📰 **News & Filings**: SEC filings, press releases, and news articles
 - 🔄 **Normalized Data**: Clean, structured data ready for analysis
-- ⚡ **Easy to Use**: Simple, intuitive API
+- ⚡ **Easy to Use**: Simple, intuitive API with both modern and backward-compatible interfaces
+- 🎯 **Type Hints**: Full type annotations for better IDE support
+- 🧪 **Well Tested**: Comprehensive test suite
 
 ## Installation
 
@@ -33,23 +35,83 @@ pip install nasdaqapi
 
 ## Quick Start
 
+### Modern API (v0.2.0+)
+
 ```python
-from nasdaqapi import fetch_all_symbol_data, normalize_nasdaq_data
+from nasdaqapi import NasdaqClient
 
-# Fetch all data for a symbol
-raw_data = fetch_all_symbol_data("AAPL")
+# Create client
+client = NasdaqClient()
 
-# Normalize the data for easier access
-data = normalize_nasdaq_data(raw_data)
+# Get real-time quote
+quote = client.get_quote("AAPL")
+print(f"${quote['price']} ({quote['change_percent']:.2%})")
 
-# Access normalized data
-print(f"Company: {data['metadata']['company_name']}")
-print(f"Price: ${data['quote']['price']}")
-print(f"Shares Outstanding: {data['key_metrics']['shares_outstanding']:,}")
-print(f"Dividend Yield: {data['key_metrics']['dividend_yield']:.2%}")
+# Get comprehensive data
+data = client.get_symbol_data("AAPL", include=['quote', 'financials'])
+print(data.keys())
+
+# Search for symbols
+tech_stocks = client.search_symbols(sector="Technology")
 ```
 
-## Available Data
+### Legacy API (backward compatible)
+
+```python
+from nasdaqapi import fetch_all_symbol_data
+
+# Still works with existing code!
+data = fetch_all_symbol_data("AAPL")
+print(f"Company: {data['quote']['company_name']}")
+```
+
+## Features
+
+### Quick Functions
+
+```python
+from nasdaqapi import get_quote, get_symbol_data, search_symbols
+
+# Quick quote lookup
+quote = get_quote("MSFT")
+
+# Get specific data categories
+data = get_symbol_data("GOOGL", include=['financials', 'ownership'])
+
+# Search symbols
+nasdaq_stocks = search_symbols(exchange="NASDAQ")
+```
+
+### Detailed Data Access
+
+```python
+from nasdaqapi import NasdaqClient
+
+client = NasdaqClient()
+
+# Financial statements
+financials = client.get_financials("AAPL", period="annual")
+income_stmt = financials['income_statement']
+balance_sheet = financials['balance_sheet']
+
+# Dividends
+dividends = client.get_dividends("MSFT")
+print(f"Yield: {dividends['yield']:.2%}")
+
+# Institutional ownership
+ownership = client.get_ownership("GOOGL")
+top_holders = ownership['institutional']['top_holders']
+
+# Historical prices
+prices = client.get_historical("TSLA", period="1month")
+for day in prices:
+    print(f"{day['date']}: ${day['close']}")
+
+# News articles
+news = client.get_news("NVDA", limit=10)
+for article in news:
+    print(f"{article['title']} - {article['source']}")
+```
 
 ### Metadata
 - Company name, symbol, exchange
